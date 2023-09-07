@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 20:09:47 by viktortr          #+#    #+#             */
-/*   Updated: 2023/07/07 11:19:34 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/06 14:18:28 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,12 @@ int	ft_atoi(char *str)
 	return (sign * res);
 }
 
-void	get_data(char **av, t_table *table)
+unsigned long	get_time(void)
 {
-	table->num_philo = (ft_atoi(av[1]));
-	table->time_to_die = (ft_atoi(av[2]) * 1000);
-	table->time_to_eat = (ft_atoi(av[3]) * 1000);
-	table->time_to_sleep = (ft_atoi(av[4]) * 1000);
-    // table->meals_to_eat = ft_atoi(av[5]);
+	unsigned long	ms;
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	ms = (tv.tv_sec * 1000UL) + (tv.tv_usec / 1000UL);
+	return (ms);
 }

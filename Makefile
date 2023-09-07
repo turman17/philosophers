@@ -1,10 +1,10 @@
 NAME = philo
 
-CC = cc
+CC = clang-12
 
-FLAGS = -Wall -Wextra -Werror -fsanitize=thread
+FLAGS =  -Wall -Wextra -Werror -g
 
-SOURCES = main.c ./utils/utils.c src/philo.c
+SOURCES = main.c ./utils/utils.c src/philo.c utils/checker.c
 OBJECTS = $(SOURCES:.c=.o)
 
 all: $(NAME)

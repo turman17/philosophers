@@ -5,84 +5,61 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/02 16:09:03 by viktortr          #+#    #+#             */
-/*   Updated: 2023/07/06 21:20:49 by viktortr         ###   ########.fr       */
+/*   Created: 2023/07/27 13:01:09 by viktortr          #+#    #+#             */
+/*   Updated: 2023/09/07 17:04:40 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int philo_init(t_table *table)
+void	init_mutex(t_table *table, char **av, int ac)
 {
-    int i = 0;
+	int	i;
 
-    table->philos = malloc(table->num_philo * sizeof(t_philo));
-    table->forks = malloc(table->num_philo * sizeof(pthread_mutex_t));
-
-    if (table->philos == NULL || table->forks == NULL)
-        return (1);
-
-    // Initialize mutexes for forks
-    while (i < table->num_philo) {
-        pthread_mutex_init(&table->forks[i], NULL);
-        i++;
-    }
-
-    i = 0;
-
-    while(i < table->num_philo) {
-        table->philos[i].id = i;
-
-        // Set fork pointers. If the philosopher is the last one, the right fork will be the first one.
-        table->philos[i].left_fork = &table->forks[i];
-        table->philos[i].right_fork = &table->forks[(i+1)%table->num_philo];
-
-        // Create threads
-        pthread_create(&table->philos[i].thread_id, NULL, philo, &table->philos[i]);
-        i++;
-    }
-
-    i = 0;
-
-    // Wait for all threads to finish
-    while(i < table->num_philo) {
-        pthread_join(table->philos[i].thread_id, NULL);
-        i++;
-    }
-
-    // Free resources
-    free(table->philos);
-    free(table->forks);
-
-    return (0);
+	i = -1;
+	table->flag = 0;
+	pthread_mutex_init(&table->waiter, NULL);
+	pthread_mutex_init(&table->write, NULL);
+	while (++i < table->num_philo)
+	{
+		pthread_mutex_init(&table->forks[i], NULL);
+		table->philos[i].id = i + 1;
+		table->philos[i].init_time = table->init_time;
+		table->philos[i].left_fork = &table->forks[i];
+		table->philos[i].right_fork = &table->forks[(i - 1 + table->num_philo)
+			% table->num_philo];
+		table->philos[i].table = table;
+		table->philos[i].time_to_die = ft_atoi(av[2]);
+		table->philos[i].time_to_eat = ft_atoi(av[3]);
+		table->philos[i].time_to_sleep = ft_atoi(av[4]);
+		if (ac == 6)
+			table->philos[i].meals_to_eat = ft_atoi(av[5]);
+		pthread_create(&table->philos[i].thread_id, NULL, (void *)philo,
+				&table->philos[i]);
+	}
 }
-
 
 int	main(int ac, char **av)
 {
 	t_table	table;
+	int		i;
 
-	if (ac == 5)
+	checker_av(ac, av);
+	table.num_philo = ft_atoi(av[1]);
+	table.philos = malloc(table.num_philo * sizeof(t_philo));
+	table.forks = malloc(table.num_philo * sizeof(pthread_mutex_t));
+	init_mutex(&table, av, ac);
+	i = -1;
+	while (++i < table.num_philo)
 	{
-		get_data(av, &table);
-		philo_init(&table);
+		pthread_join(table.philos[i].thread_id, NULL);
 	}
+	pthread_mutex_destroy(&table.write);
+	pthread_mutex_destroy(&table.waiter);
+	i = -1;
+	while (++i < table.num_philo)
+		pthread_mutex_destroy(&table.forks[i]);
+	free(table.philos);
+	free(table.forks);
 	return (0);
 }
-
-// {
-// 	int			tmp;
-// 	pthread_t	thread;
-
-// 	tmp = 0;
-// 	pthread_mutex_init(&mutex, NULL);
-// 	pthread_create(&thread, 0, eat, &tmp);
-// 	pthread_join(thread, 0);
-// 	pthread_mutex_lock(&mutex);
-// 	printf("%d\n", tmp);
-// 	pthread_mutex_unlock(&mutex);
-// 	pthread_mutex_destroy(&mutex);
-// 	return (0);
-// }
-
-//arguments: number_of_philosophers | time_to_die | time_to_eat | time_to_sleep
