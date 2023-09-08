@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 20:09:47 by viktortr          #+#    #+#             */
-/*   Updated: 2023/09/06 14:18:28 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/08 22:19:57 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,27 @@ unsigned long	get_time(void)
 	gettimeofday(&tv, NULL);
 	ms = (tv.tv_sec * 1000UL) + (tv.tv_usec / 1000UL);
 	return (ms);
+}
+
+void	checker_if_dead(t_philo *philo)
+{
+	if (is_dead(philo))
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+		return ;
+	}
+}
+
+void	is_thinking(t_philo *philo)
+{
+	unsigned long	current_time;
+
+	if (is_dead(philo))
+		return ;
+	pthread_mutex_lock(&philo->table->write);
+	current_time = get_time();
+	printf("%ld		%d		Is thinking\n", (current_time - philo->init_time),
+		philo->id);
+	pthread_mutex_unlock(&philo->table->write);
 }
