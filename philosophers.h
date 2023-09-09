@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 19:23:11 by viktortr          #+#    #+#             */
-/*   Updated: 2023/09/09 13:01:54 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/09 16:19:40 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@ void					is_thinking(t_philo *philo);
 void					lock_right_fork(t_philo *philo);
 void					lock_left_fork(t_philo *philo);
 void					eating_(t_philo *philo);
+void					take_forks(t_philo *philo);
 
 #endif
