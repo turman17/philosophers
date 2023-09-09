@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 20:09:47 by viktortr          #+#    #+#             */
-/*   Updated: 2023/09/08 22:19:57 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/09 13:01:41 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,20 @@ void	is_thinking(t_philo *philo)
 	printf("%ld		%d		Is thinking\n", (current_time - philo->init_time),
 		philo->id);
 	pthread_mutex_unlock(&philo->table->write);
+}
+
+void	destroy_me(t_table *table)
+{
+	int	i;
+
+	i = -1;
+	while (++i < table->num_philo)
+		pthread_join(table->philos[i].thread_id, NULL);
+	pthread_mutex_destroy(&table->write);
+	pthread_mutex_destroy(&table->waiter);
+	i = -1;
+	while (++i < table->num_philo)
+		pthread_mutex_destroy(&table->forks[i]);
+	free(table->philos);
+	free(table->forks);
 }

@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 19:23:11 by viktortr          #+#    #+#             */
-/*   Updated: 2023/09/08 22:37:03 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/09 13:01:54 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void					*philo(void *arg);
 int						ft_atoi(char *str);
 unsigned long			get_time(void);
 int						checker_av(int ac, char **av);
+void					destroy_me(t_table *table);
 
 /*						philo_stuff						  */
 void					checker_if_dead(t_philo *philo);

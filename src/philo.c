@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 23:55:12 by viktortr          #+#    #+#             */
-/*   Updated: 2023/09/08 22:36:41 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/09 12:44:33 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,20 @@ int	is_dead(t_philo *philo)
 	return (0);
 }
 
+void	take_forks(t_philo *philo)
+{
+	if (philo->id % 2 == 0)
+	{
+		lock_left_fork(philo);
+		lock_right_fork(philo);
+	}
+	else
+	{
+		lock_right_fork(philo);
+		lock_left_fork(philo);
+	}
+}
+
 void	philo_is_eating(t_philo *philo)
 {
 	unsigned long	current_time;
@@ -54,20 +68,6 @@ void	philo_is_eating(t_philo *philo)
 		philo->id);
 	pthread_mutex_unlock(&philo->table->write);
 	eating_(philo);
-}
-
-void	take_forks(t_philo *philo)
-{
-	if (philo->id % 2 == 0)
-	{
-		lock_left_fork(philo);
-		lock_right_fork(philo);
-	}
-	else
-	{
-		lock_right_fork(philo);
-		lock_left_fork(philo);
-	}
 }
 
 void	ft_sleep(t_philo *philo)

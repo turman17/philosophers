@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 13:01:09 by viktortr          #+#    #+#             */
-/*   Updated: 2023/09/08 22:13:25 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/09 13:01:36 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void	init_mutex(t_table *table, char **av, int ac)
 	i = -1;
 	while (++i < table->num_philo)
 		pthread_mutex_init(&table->forks[i], NULL);
-	time = get_time();
 	i = -1;
 	if (ac == 6)
 		table->meals_to_eat = ft_atoi(av[5]) * ft_atoi(av[1]);
+	time = get_time();
 	while (++i < table->num_philo)
 	{
 		table->philos[i].id = i + 1;
@@ -40,30 +40,33 @@ void	init_mutex(t_table *table, char **av, int ac)
 	}
 }
 
+void	one_philo_work(int time_to_die)
+{
+	printf("0\t\t1\t\thas taken a fork\n");
+	usleep((time_to_die) * 1000);
+	printf("%d\t\t1\t\tdied\n", time_to_die);
+}
+
 int	main(int ac, char **av)
 {
 	t_table	table;
-	int		i;
 
 	if (checker_av(ac, av) == 0)
 	{
 		table.num_philo = ft_atoi(av[1]);
+		if (table.num_philo == 1)
+		{
+			table.philos->time_to_die = ft_atoi(av[2]);
+			one_philo_work(table.philos->time_to_die);
+			return (1);
+		}
 		table.philos = malloc(table.num_philo * sizeof(t_philo));
 		table.forks = malloc(table.num_philo * sizeof(pthread_mutex_t));
 		table.flag = 0;
 		pthread_mutex_init(&table.waiter, NULL);
 		pthread_mutex_init(&table.write, NULL);
 		init_mutex(&table, av, ac);
-		i = -1;
-		while (++i < table.num_philo)
-			pthread_join(table.philos[i].thread_id, NULL);
-		pthread_mutex_destroy(&table.write);
-		pthread_mutex_destroy(&table.waiter);
-		i = -1;
-		while (++i < table.num_philo)
-			pthread_mutex_destroy(&table.forks[i]);
-		free(table.philos);
-		free(table.forks);
+		destroy_me(&table);
 	}
 	return (0);
 }
