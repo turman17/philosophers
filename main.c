@@ -6,7 +6,7 @@
 /*   By: viktortr <viktortr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 13:01:09 by viktortr          #+#    #+#             */
-/*   Updated: 2023/09/09 16:35:46 by viktortr         ###   ########.fr       */
+/*   Updated: 2023/09/11 16:31:59 by viktortr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	main(int ac, char **av)
 		i = -1;
 		if (ac == 6)
 			table.meals_to_eat = ft_atoi(av[5]) * ft_atoi(av[1]);
+		else
+			table.meals_to_eat = -1;
 		init_mutex(&table, av);
 		destroy_me(&table);
 	}
