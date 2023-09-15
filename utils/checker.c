@@ -109,6 +109,7 @@ void	eating_(t_philo *philo)
 		}
 		usleep(1);
 	}
+	pthread_mutex_lock(&philo->table->write);
 	philo->table->meals_to_eat--;
 	if (philo->table->meals_to_eat == 0)
 	{
@@ -116,6 +117,7 @@ void	eating_(t_philo *philo)
 		philo->table->flag = 1;
 		pthread_mutex_unlock(&philo->table->waiter);
 	}
+	pthread_mutex_unlock(&philo->table->write);
 	philo->last_ate = get_time();
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
